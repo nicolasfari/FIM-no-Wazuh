@@ -53,7 +53,8 @@ rm /tmp/arquivo_suspeito.txt
 ```
 <img width="769" height="83" alt="image" src="https://github.com/user-attachments/assets/7fa7388f-1bae-4170-9f66-f28e9f34eaaf" />
 
-> ⚠️ Evite alterar `/etc/passwd` diretamente em ambiente real — nesse lab, se optar por testar nele, sempre faça backup antes (`sudo cp /etc/passwd /etc/passwd.bak`) e restaure ao final.> 
+> ⚠️ Evite alterar /etc/passwd diretamente em ambiente real — nesse lab, se optar por testar nele, sempre faça backup antes (sudo cp /etc/passwd /etc/passwd.bak) e restaure ao final.
+
 ---
 
 ## 4. Observar a detecção no Wazuh
@@ -93,12 +94,10 @@ No Wazuh temos um painel dedicado em Endpoint Security → File Integrity Monito
 <img width="1913" height="533" alt="image" src="https://github.com/user-attachments/assets/55c474e6-d10e-4472-874f-efd26c080826" />
 
 ## Conclusão
-O FIM é a base da detecção de manipulação não autorizada de arquivos — desde um ransomware alterando arquivos em massa até um atacante plantando um webshell ou modificando configurações de serviços (como o sshd_config) para garantir persistência. Entender o dado bruto (hash antes/depois, caminho, tipo de evento, usuário responsável) é o que permite ao analista diferenciar uma mudança legítima de uma maliciosa. O alerta sozinho não conta a história completa sem esse contexto investigativo.
+O FIM é a base da detecção de manipulação não autorizada de arquivos — desde um ransomware alterando arquivos em massa até um atacante plantando um *webshell* ou modificando configurações de serviços (como o `sshd_config`) para garantir persistência. Entender o dado bruto (hash antes/depois, caminho, tipo de evento, usuário responsável) é o que permite ao analista diferenciar uma mudança legítima de uma maliciosa. O alerta sozinho não conta a história completa sem esse contexto investigativo.
 
 ## Aprendizados
-O modo realtime="yes" (via inotify) permite detecção quase instantânea, o que é essencial para diretórios críticos como /etc e /etc/ssh, onde o ciclo padrão de 12 horas deixaria uma janela de exposição muito ampla.
 
-A comparação criptográfica (hash) antes/depois é a evidência mais confiável para confirmar que o conteúdo mudou, descartando falsos positivos gerados por simples alterações de metadados.
-
-Arquivos de configuração de serviços (como o sshd_config) são alvos táticos clássicos. Uma alteração aqui frequentemente indica uma tentativa de enfraquecer controles de acesso (ex: permitir login direto de root, mudar a porta, ou permitir autenticação por senha quando deveria ser exclusivamente por chave).
-
+- O modo `realtime="yes"` (via *inotify*) permite detecção quase instantânea, o que é essencial para diretórios críticos como `/etc` e `/etc/ssh`, onde o ciclo padrão de 12 horas deixaria uma janela de exposição muito ampla.
+- A comparação criptográfica (*hash*) antes/depois é a evidência mais confiável para confirmar que o conteúdo mudou, descartando falsos positivos gerados por simples alterações de metadados.
+- Arquivos de configuração de serviços (como o `sshd_config`) são alvos táticos clássicos. Uma alteração aqui frequentemente indica uma tentativa de enfraquecer controles de acesso (ex: permitir login direto de root, mudar a porta, ou permitir autenticação por senha quando deveria ser exclusivamente por chave).
